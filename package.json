@@ -20,5 +20,9 @@
   "bugs": {
     "url": "https://github.com/bfulop/regression-watcher/issues"
   },
-  "homepage": "https://github.com/bfulop/regression-watcher#readme"
+  "homepage": "https://github.com/bfulop/regression-watcher#readme",
+  "dependencies": {
+    "chokidar": "^2.0.3",
+    "ramda": "^0.25.0"
+  }
 }
