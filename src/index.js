@@ -3,11 +3,11 @@ const path = require('path')
 const http = require('http')
 const R = require('ramda')
 const chokidar = require('chokidar')
+const concat = require('concat-stream')
 
 const logger = r => {
-  console.log('logger:')
   console.log(r)
-  console.log('---logger')
+  console.log('---')
   return r
 }
 
@@ -22,24 +22,37 @@ var watcher = chokidar.watch(targetPath, {
   persistent: true
 })
 
+const displayResults = ({ route, width, targetelem, numDiffPixels }) => {
+  if (numDiffPixels > 100) {
+    console.warn('diff ✗', route, width, targetelem, numDiffPixels)
+  } else {
+    console.log('diff ✓', route, width, targetelem, numDiffPixels)
+  }
+  return { route, width, targetelem, numDiffPixels }
+}
+
 console.log('watching', targetPath, 'server', regressionServer)
+
+const handleResult = R.compose(R.map(displayResults), JSON.parse)
+
+const sendRequest = () => {
+  http
+    .request(
+      {
+        method: 'GET',
+        host: regressionServer,
+        port: 3202,
+        path: '/compare'
+      },
+      function (res) {
+        res.setEncoding('utf8')
+        res.pipe(concat(handleResult))
+      }
+    )
+    .end()
+}
 
 watcher.on('change', path => {
   logger(`File ${path} has been changed`)
-  http.request({
-    method: 'GET',
-    host: regressionServer,
-    port: 3202,
-    path: '/compare'
-  }, function (res) {
-    console.log(`STATUS: ${res.statusCode}`)
-    console.log(`HEADERS: ${JSON.stringify(res.headers)}`)
-    res.setEncoding('utf8')
-    res.on('data', (chunk) => {
-      console.log(`BODY: ${chunk}`)
-    })
-    res.on('end', () => {
-      console.log('No more data in response.')
-    })
-  }).end()
+  setTimeout(sendRequest, 1300)
 })
