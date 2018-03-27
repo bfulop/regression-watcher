@@ -1,0 +1,24 @@
+{
+  "name": "regression-watcher",
+  "version": "0.0.1",
+  "description": "Notify the regression server and display diff results",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://bfulop@github.com/bfulop/regression-watcher.git"
+  },
+  "keywords": [
+    "testing",
+    "regression",
+    "frontend"
+  ],
+  "author": "Balint Fulop <bfulop@mac.com> (http://abundancia.io/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bfulop/regression-watcher/issues"
+  },
+  "homepage": "https://github.com/bfulop/regression-watcher#readme"
+}
