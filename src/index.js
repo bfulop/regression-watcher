@@ -66,7 +66,6 @@ const sendRequest = () => {
           return
         }
         res.setEncoding('utf8')
-        anybar('cyan')
         res.pipe(concat(handleResult))
       }
     )
