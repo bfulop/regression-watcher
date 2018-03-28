@@ -4,12 +4,15 @@ const http = require('http')
 const R = require('ramda')
 const chokidar = require('chokidar')
 const concat = require('concat-stream')
+const anybar = require('anybar')
 
 const logger = r => {
   console.log(r)
   console.log('---')
   return r
 }
+
+anybar('yellow')
 
 const watchTarget = R.compose(R.drop(6), R.find(R.startsWith('watch=')), R.drop(2))
 
@@ -31,9 +34,22 @@ const displayResults = ({ route, width, targetelem, numDiffPixels }) => {
   return { route, width, targetelem, numDiffPixels }
 }
 
+const sumDif = (acc, { numDiffPixels }) => R.add(acc, numDiffPixels)
+const showSum = s => {
+  if (s > 0) {
+    console.log('sum ✗: ', s)
+    anybar('orange')
+  } else {
+    console.log('sum ✓: ', s)
+    anybar('green')
+  }
+  return s
+}
+const summariseResult = R.compose(showSum, R.reduce(sumDif, 0))
+
 console.log('watching', targetPath, 'server', regressionServer)
 
-const handleResult = R.compose(R.map(displayResults), JSON.parse)
+const handleResult = R.compose(summariseResult, R.map(displayResults), JSON.parse)
 
 const sendRequest = () => {
   http
@@ -45,7 +61,12 @@ const sendRequest = () => {
         path: '/compare'
       },
       function (res) {
+        if (res.statusCode !== 200) {
+          anybar('red')
+          return
+        }
         res.setEncoding('utf8')
+        anybar('cyan')
         res.pipe(concat(handleResult))
       }
     )
@@ -54,5 +75,6 @@ const sendRequest = () => {
 
 watcher.on('change', path => {
   logger(`File ${path} has been changed`)
+  anybar('blue')
   setTimeout(sendRequest, 1300)
 })

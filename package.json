@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/bfulop/regression-watcher#readme",
   "dependencies": {
+    "anybar": "^3.0.0",
     "chokidar": "^2.0.3",
     "concat-stream": "^1.6.2",
     "ramda": "^0.25.0",
