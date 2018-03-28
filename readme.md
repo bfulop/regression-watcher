@@ -1,5 +1,7 @@
 # Changes watcher for regression server
 
+![Anybar feedback](https://5a53e939e8f0862e6153-623c55fb68acb92f1f433c6448bed244.ssl.cf3.rackcdn.com/github/regression-watch/anybar-l.gif)
+
 Watches a file or folder (typically the CSS files), notifies the [regression server](https://github.com/bfulop/regression-server), and displays the results in the terminal.
 
 ## Usage
