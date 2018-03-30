@@ -12,7 +12,9 @@ const logger = r => {
   return r
 }
 
-anybar('yellow')
+let delayTest = setTimeout(function () {
+  anybar('yellow')
+}, 1)
 
 const watchTarget = R.compose(R.drop(6), R.find(R.startsWith('watch=')), R.drop(2))
 
@@ -36,7 +38,7 @@ const displayResults = ({ route, width, targetelem, numDiffPixels }) => {
 
 const sumDif = (acc, { numDiffPixels }) => R.add(acc, numDiffPixels)
 const showSum = s => {
-  if (s > 0) {
+  if (s > 100) {
     console.log('sum ✗: ', s)
     anybar('orange')
   } else {
@@ -52,6 +54,7 @@ console.log('watching', targetPath, 'server', regressionServer)
 const handleResult = R.compose(summariseResult, R.map(displayResults), JSON.parse)
 
 const sendRequest = () => {
+  anybar('blue')
   http
     .request(
       {
@@ -74,6 +77,7 @@ const sendRequest = () => {
 
 watcher.on('change', path => {
   logger(`File ${path} has been changed`)
-  anybar('blue')
-  setTimeout(sendRequest, 1300)
+  anybar('cyan')
+  clearTimeout(delayTest)
+  delayTest = setTimeout(sendRequest, 5000)
 })
